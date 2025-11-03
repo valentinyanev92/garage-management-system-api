@@ -1,4 +1,4 @@
-package com.softuni.gms.controller;
+package com.softuni.gms.web;
 
 import com.softuni.gms.service.WhatsAppService;
 import org.springframework.beans.factory.annotation.Autowired;

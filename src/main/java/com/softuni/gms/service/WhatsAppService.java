@@ -21,6 +21,7 @@ public class WhatsAppService {
     }
 
     public void sendWhatsAppMessage(String phoneNumber, String message) {
+
         String chatId = phoneNumber + "@c.us";
 
         Map<String, Object> payload = Map.of(
