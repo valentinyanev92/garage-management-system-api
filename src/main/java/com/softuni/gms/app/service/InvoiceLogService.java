@@ -1,7 +1,7 @@
-package com.softuni.gms.service;
+package com.softuni.gms.app.service;
 
-import com.softuni.gms.model.InvoiceLog;
-import com.softuni.gms.repository.InvoiceLogRepository;
+import com.softuni.gms.app.model.InvoiceLog;
+import com.softuni.gms.app.repository.InvoiceLogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,13 +1,13 @@
-package com.softuni.gms.service;
+package com.softuni.gms.app.service;
 
 import com.lowagie.text.*;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
-import com.softuni.gms.web.dto.InvoiceRequest;
-import com.softuni.gms.web.dto.UsedPartRequest;
-import com.softuni.gms.web.mapper.DtoMapper;
-import com.softuni.gms.repository.InvoiceLogRepository;
+import com.softuni.gms.app.repository.InvoiceLogRepository;
+import com.softuni.gms.app.web.dto.InvoiceRequest;
+import com.softuni.gms.app.web.dto.UsedPartRequest;
+import com.softuni.gms.app.web.mapper.DtoMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
@@ -22,6 +22,8 @@ public class PdfService {
 
         private final InvoiceLogRepository invoiceLogRepository;
 
+
+        //TODO - REMOVE TRY-CATCH??
         public byte[] generateInvoice(InvoiceRequest request) {
 
             Document document = new Document(PageSize.A4, 40, 40, 60, 40);

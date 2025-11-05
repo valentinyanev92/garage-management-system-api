@@ -1,6 +1,6 @@
-package com.softuni.gms.service;
+package com.softuni.gms.app.service;
 
-import com.softuni.gms.config.GreenApiProperties;
+import com.softuni.gms.app.config.GreenApiProperties;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;

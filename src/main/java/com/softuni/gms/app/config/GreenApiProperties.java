@@ -1,4 +1,4 @@
-package com.softuni.gms.config;
+package com.softuni.gms.app.config;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -1,4 +1,4 @@
-package com.softuni.gms.model;
+package com.softuni.gms.app.model;
 
 import lombok.*;
 

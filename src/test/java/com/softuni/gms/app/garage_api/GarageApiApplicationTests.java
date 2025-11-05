@@ -1,4 +1,4 @@
-package com.softuni.gms.garage_api;
+package com.softuni.gms.app.garage_api;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

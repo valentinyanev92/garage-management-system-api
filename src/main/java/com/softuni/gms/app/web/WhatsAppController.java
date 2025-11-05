@@ -1,6 +1,6 @@
-package com.softuni.gms.web;
+package com.softuni.gms.app.web;
 
-import com.softuni.gms.service.WhatsAppService;
+import com.softuni.gms.app.service.WhatsAppService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

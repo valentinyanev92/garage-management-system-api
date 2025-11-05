@@ -1,4 +1,4 @@
-package com.softuni.gms.web.dto;
+package com.softuni.gms.app.web.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

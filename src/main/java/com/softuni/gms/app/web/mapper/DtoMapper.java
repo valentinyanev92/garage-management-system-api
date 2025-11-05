@@ -1,9 +1,9 @@
-package com.softuni.gms.web.mapper;
+package com.softuni.gms.app.web.mapper;
 
-import com.softuni.gms.web.dto.InvoiceRequest;
-import com.softuni.gms.web.dto.UsedPartRequest;
-import com.softuni.gms.model.InvoiceLog;
-import com.softuni.gms.model.UsedPartInfo;
+import com.softuni.gms.app.web.dto.InvoiceRequest;
+import com.softuni.gms.app.web.dto.UsedPartRequest;
+import com.softuni.gms.app.model.InvoiceLog;
+import com.softuni.gms.app.model.UsedPartInfo;
 
 import java.time.LocalDateTime;
 import java.util.List;

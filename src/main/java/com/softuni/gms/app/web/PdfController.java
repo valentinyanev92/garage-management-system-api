@@ -1,13 +1,15 @@
-package com.softuni.gms.web;
+package com.softuni.gms.app.web;
 
-import com.softuni.gms.model.InvoiceLog;
-import com.softuni.gms.service.InvoiceLogService;
-import com.softuni.gms.service.PdfService;
-import com.softuni.gms.web.dto.InvoiceRequest;
+import com.softuni.gms.app.model.InvoiceLog;
+import com.softuni.gms.app.service.InvoiceLogService;
+import com.softuni.gms.app.service.PdfService;
+import com.softuni.gms.app.web.dto.InvoiceRequest;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,7 +29,11 @@ public class PdfController {
     }
 
     @PostMapping("/generate")
-    public ResponseEntity<byte[]> generateInvoice(@RequestBody InvoiceRequest request) {
+    public ResponseEntity<byte[]> generateInvoice(@RequestBody @Valid InvoiceRequest request, BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            return ResponseEntity.badRequest().build();
+        }
 
         byte[] pdfBytes = pdfService.generateInvoice(request);
         return ResponseEntity.ok()
