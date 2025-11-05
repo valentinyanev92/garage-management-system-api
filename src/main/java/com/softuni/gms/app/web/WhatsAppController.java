@@ -1,11 +1,15 @@
 package com.softuni.gms.app.web;
 
 import com.softuni.gms.app.service.WhatsAppService;
+import com.softuni.gms.app.web.dto.RepairCompletionRequest;
+import com.softuni.gms.app.web.mapper.DtoMapper;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -19,12 +23,14 @@ public class WhatsAppController {
         this.whatsAppService = whatsAppService;
     }
 
-    @PostMapping("/send")
-    public ResponseEntity<String> sendMessage(
-            @RequestParam String phone,
-            @RequestParam String message) {
+    @PostMapping("/complete-order")
+    public ResponseEntity<String> sendMessageForCompletedRepairOrder(@RequestBody @Valid RepairCompletionRequest request, BindingResult bindingResult){
 
-        whatsAppService.sendWhatsAppMessage(phone, message);
-        return ResponseEntity.ok("Message sent to: " + phone);
+        if (bindingResult.hasErrors()){
+            return ResponseEntity.badRequest().build();
+        }
+
+        whatsAppService.sendWhatsAppMessage(request.getPhoneNumber(), DtoMapper.repairCompletionRequestToString(request));
+        return ResponseEntity.ok().build();
     }
 }
