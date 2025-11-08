@@ -10,6 +10,7 @@ import com.softuni.gms.app.web.dto.InvoiceRequest;
 import com.softuni.gms.app.web.dto.UsedPartRequest;
 import com.softuni.gms.app.web.mapper.DtoMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
@@ -17,14 +18,13 @@ import java.io.ByteArrayOutputStream;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PdfService {
 
         private final InvoiceLogRepository invoiceLogRepository;
 
-
-        //TODO - REMOVE TRY-CATCH??
         public byte[] generateInvoice(InvoiceRequest request) {
 
             Document document = new Document(PageSize.A4, 40, 40, 60, 40);
@@ -42,7 +42,7 @@ public class PdfService {
                     document.add(logo);
                     document.add(Chunk.NEWLINE);
                 } catch (Exception e) {
-                    System.err.println("Could not load logo: " + e.getMessage());
+                    log.error("Error while generating logo {}", e.getMessage());
                 }
 
                 Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 20);
@@ -106,7 +106,7 @@ public class PdfService {
                 document.close();
 
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error("Error while generating invoice {}", e.getMessage());
             }
 
             byte[] pdfBytes = outputStream.toByteArray();
@@ -115,6 +115,7 @@ public class PdfService {
             invoiceLog.setDocument(pdfBytes);
             invoiceLogRepository.save(invoiceLog);
 
+            log.info("Invoice has been saved successfully");
             return pdfBytes;
         }
 

@@ -1,6 +1,7 @@
 package com.softuni.gms.app.service;
 
 import com.softuni.gms.app.config.GreenApiProperties;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -11,6 +12,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.Collections;
 import java.util.Map;
 
+@Slf4j
 @Service
 public class WhatsAppService {
 
@@ -44,9 +46,9 @@ public class WhatsAppService {
 
         try {
             ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
-            System.out.println("Green API response: " + response.getBody());
+            log.info("Message send! Response from GreenApi: {}", response.getBody());
         } catch (Exception ex) {
-            System.err.println("Error: " + ex.getMessage());
+            log.error("Error while sending the message to GreenApi: {}", ex.getMessage());
         }
     }
 }

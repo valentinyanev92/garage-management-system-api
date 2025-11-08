@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
-@Service
 @Slf4j
+@Service
 public class KafkaConsumerService {
 
     private final WhatsAppService whatsAppService;
@@ -21,6 +21,7 @@ public class KafkaConsumerService {
     @KafkaListener(topics = "gms-events", groupId = "gms-group")
     public void listen(RepairKafkaEventRequest event) {
 
+        log.info("Received RepairKafkaEventRequest {}", event.toString());
         whatsAppService.sendWhatsAppMessage(event.getPhoneNumber(), event.getMessage());
     }
 }
