@@ -55,4 +55,16 @@ public class PdfController {
         List<InvoiceLog> invoices = invoiceLogService.findByRepairId(repairId);
         return ResponseEntity.ok(invoices);
     }
+
+    @GetMapping("/repair/{repairId}/latest")
+    public ResponseEntity<byte[]> downloadLatestByRepairId(@PathVariable UUID repairId) {
+
+        return invoiceLogService.findLatestByRepairId(repairId)
+                .filter(invoiceLog -> invoiceLog.getDocument() != null && invoiceLog.getDocument().length > 0)
+                .map(invoiceLog -> ResponseEntity.ok()
+                        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=invoice-" + invoiceLog.getId() + ".pdf")
+                        .contentType(MediaType.APPLICATION_PDF)
+                        .body(invoiceLog.getDocument()))
+                .orElse(ResponseEntity.notFound().build());
+    }
 }

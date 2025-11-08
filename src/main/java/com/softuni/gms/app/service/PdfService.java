@@ -4,6 +4,7 @@ import com.lowagie.text.*;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
+import com.softuni.gms.app.model.InvoiceLog;
 import com.softuni.gms.app.repository.InvoiceLogRepository;
 import com.softuni.gms.app.web.dto.InvoiceRequest;
 import com.softuni.gms.app.web.dto.UsedPartRequest;
@@ -108,9 +109,13 @@ public class PdfService {
                 e.printStackTrace();
             }
 
-            invoiceLogRepository.save(DtoMapper.mapInvoiceRequestToInvoiceLog(request));
+            byte[] pdfBytes = outputStream.toByteArray();
 
-            return outputStream.toByteArray();
+            InvoiceLog invoiceLog = DtoMapper.mapInvoiceRequestToInvoiceLog(request);
+            invoiceLog.setDocument(pdfBytes);
+            invoiceLogRepository.save(invoiceLog);
+
+            return pdfBytes;
         }
 
         private void addTableHeader(PdfPTable table, String... headers) {

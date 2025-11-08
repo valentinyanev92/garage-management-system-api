@@ -1,23 +1,19 @@
 package com.softuni.gms.app.kafka;
 
 import com.softuni.gms.app.model.RepairLog;
-import com.softuni.gms.app.repository.RepairEventRepository;
+import com.softuni.gms.app.repository.RepairLogRepository;
 import com.softuni.gms.app.shared.kafka.dto.RepairKafkaEventRequest;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
 @Component
+@RequiredArgsConstructor
 public class RepairEventConsumer {
 
-    private final RepairEventRepository logRepository;
-
-    @Autowired
-    public RepairEventConsumer(RepairEventRepository logRepository) {
-        this.logRepository = logRepository;
-    }
+    private final RepairLogRepository repairLogRepository;
 
     @KafkaListener(topics = "gms-events", groupId = "gms-group", containerFactory = "kafkaListenerContainerFactory")
     public void consume(RepairKafkaEventRequest event) {
@@ -27,6 +23,6 @@ public class RepairEventConsumer {
         repairLog.setMessage(event.getMessage());
         repairLog.setStatus(event.getNewStatus());
         repairLog.setReceivedAt(LocalDateTime.now());
-        logRepository.save(repairLog);
+        repairLogRepository.save(repairLog);
     }
 }

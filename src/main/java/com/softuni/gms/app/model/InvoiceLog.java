@@ -33,6 +33,6 @@ public class InvoiceLog {
     private BigDecimal partsTotal;
     private BigDecimal serviceFee;
     private BigDecimal totalPrice;
-
     private List<UsedPartInfo> usedParts;
+    private byte[] document;
 }
