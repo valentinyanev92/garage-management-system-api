@@ -2,6 +2,7 @@ package com.softuni.gms.app.service;
 
 import com.softuni.gms.app.config.GreenApiProperties;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -17,9 +18,12 @@ import java.util.Map;
 public class WhatsAppService {
 
     private final GreenApiProperties props;
+    private final MessageLogService messageLogService;
 
-    public WhatsAppService(GreenApiProperties props) {
+    @Autowired
+    public WhatsAppService(GreenApiProperties props, MessageLogService messageLogService) {
         this.props = props;
+        this.messageLogService = messageLogService;
     }
 
     public void sendWhatsAppMessage(String phoneNumber, String message) {
@@ -47,8 +51,10 @@ public class WhatsAppService {
         try {
             ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
             log.info("Message send! Response from GreenApi: {}", response.getBody());
+            messageLogService.logMessage(phoneNumber, message, "WHATSAPP", "SENT", response.getBody(), null);
         } catch (Exception ex) {
             log.error("Error while sending the message to GreenApi: {}", ex.getMessage());
+            messageLogService.logMessage(phoneNumber, message, "WHATSAPP", "FAILED", null, ex.getMessage());
         }
     }
 }
