@@ -33,4 +33,11 @@ public class InvoiceLogService {
 
         return invoiceLogRepository.findFirstByRepairIdOrderByGeneratedAtDesc(repairId);
     }
+
+    public byte[] getLatestPdf(UUID repairId) {
+        return findLatestByRepairId(repairId)
+                .map(InvoiceLog::getDocument)
+                .filter(doc -> doc.length > 0)
+                .orElse(null);
+    }
 }

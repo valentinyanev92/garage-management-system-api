@@ -28,7 +28,7 @@ public class PdfController {
         this.invoiceLogService = invoiceLogService;
     }
 
-    @PostMapping("/generate")
+    @PostMapping("/invoices")
     public ResponseEntity<byte[]> generateInvoice(@RequestBody @Valid InvoiceRequest request, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
@@ -59,12 +59,15 @@ public class PdfController {
     @GetMapping("/repair/{repairId}/latest")
     public ResponseEntity<byte[]> downloadLatestByRepairId(@PathVariable UUID repairId) {
 
-        return invoiceLogService.findLatestByRepairId(repairId)
-                .filter(invoiceLog -> invoiceLog.getDocument() != null && invoiceLog.getDocument().length > 0)
-                .map(invoiceLog -> ResponseEntity.ok()
-                        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=invoice-" + invoiceLog.getId() + ".pdf")
-                        .contentType(MediaType.APPLICATION_PDF)
-                        .body(invoiceLog.getDocument()))
-                .orElse(ResponseEntity.notFound().build());
+        byte[] pdf = invoiceLogService.getLatestPdf(repairId);
+
+        if (pdf == null || pdf.length == 0) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=invoice-" + repairId + ".pdf")
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(pdf);
     }
 }
