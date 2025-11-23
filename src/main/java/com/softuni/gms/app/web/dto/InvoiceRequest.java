@@ -54,5 +54,7 @@ public class InvoiceRequest {
 
     @NotNull
     private BigDecimal totalPrice;
-    private List<UsedPartRequest> usedParts;
+
+    @Builder.Default
+    private List<UsedPartRequest> usedParts = List.of();
 }

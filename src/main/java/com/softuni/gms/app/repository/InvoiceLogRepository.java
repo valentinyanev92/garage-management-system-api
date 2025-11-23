@@ -14,4 +14,6 @@ public interface InvoiceLogRepository extends MongoRepository<InvoiceLog, String
     List<InvoiceLog> findAllByRepairId(UUID repairId);
 
     Optional<InvoiceLog> findFirstByRepairIdOrderByGeneratedAtDesc(UUID repairId);
+
+    Optional<InvoiceLog> findByRepairId(UUID repairId);
 }
