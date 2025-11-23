@@ -1,6 +1,7 @@
 package com.softuni.gms.app.service;
 
 import com.softuni.gms.app.config.GreenApiProperties;
+import com.softuni.gms.app.exception.WhatsAppSendException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -55,6 +56,8 @@ public class WhatsAppService {
         } catch (Exception ex) {
             log.error("Error while sending the message to GreenApi: {}", ex.getMessage());
             messageLogService.logMessage(phoneNumber, message, "WHATSAPP", "FAILED", null, ex.getMessage());
+
+            throw new WhatsAppSendException("Failed to send WhatsApp message");
         }
     }
 }

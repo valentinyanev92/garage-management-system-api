@@ -4,6 +4,7 @@ import com.lowagie.text.*;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
+import com.softuni.gms.app.exception.InvoiceGenerationException;
 import com.softuni.gms.app.model.InvoiceLog;
 import com.softuni.gms.app.repository.InvoiceLogRepository;
 import com.softuni.gms.app.web.dto.InvoiceRequest;
@@ -43,6 +44,7 @@ public class PdfService {
                     document.add(Chunk.NEWLINE);
                 } catch (Exception e) {
                     log.error("Error while generating logo {}", e.getMessage());
+                    throw new InvoiceGenerationException("Failed to generate invoice PDF");
                 }
 
                 Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 20);
