@@ -50,7 +50,7 @@ public class DtoMapper {
                 .collect(Collectors.toList());
     }
 
-    public static String repairCompletionRequestToString(RepairCompletionRequest request){
+    public static String repairCompletionRequestToString(RepairCompletionRequest request) {
 
         return String.format("Repair order for %s %s is completed by %s %s!",
                 request.getCarBrand(),

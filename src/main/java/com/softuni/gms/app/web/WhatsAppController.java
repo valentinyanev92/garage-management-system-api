@@ -24,9 +24,9 @@ public class WhatsAppController {
     }
 
     @PostMapping("/complete-order")
-    public ResponseEntity<String> sendMessageForCompletedRepairOrder(@RequestBody @Valid RepairCompletionRequest request, BindingResult bindingResult){
+    public ResponseEntity<String> sendMessageForCompletedRepairOrder(@RequestBody @Valid RepairCompletionRequest request, BindingResult bindingResult) {
 
-        if (bindingResult.hasErrors()){
+        if (bindingResult.hasErrors()) {
             return ResponseEntity.badRequest().build();
         }
 
