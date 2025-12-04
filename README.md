@@ -69,18 +69,41 @@ Key responsibilities:
 
 ---
 
-## 2.3 Domain Entities (2 entities)
+## 2.3 Domain Entities (3 entities)
 
-### **InvoiceRecord**
-Stores metadata for generated PDF invoices.
+### **InvoiceLog**
+Stores metadata for generated PDF invoices:
+- `id` — String (Mongo ObjectId stored as String)
+- `repairId` — UUID reference to the main application repair
+- Timestamps: createdAt, completedAt, generatedAt
+- Customer & mechanic data
+- Car details
+- Price breakdown (partsTotal, serviceFee, totalPrice)
+- List of `UsedPartInfo`
+- PDF document stored as `byte[] document`
 
 ### **MessageLog**
-Stores details for every WhatsApp message request.
+Stores details for every WhatsApp message request:
+- `id` — String
+- recipient
+- messageContent
+- channel (e.g. WhatsApp)
+- status / response / error
+- timestamp
 
-**Both entities:**
-- Use **UUID**
-- Have **Repository + Service**
-- Are part of valid functionalities
+### **RepairLog**
+Stores repair event logs:
+- `id` — String
+- `repairId` — String reference to repair
+- status
+- message
+- receivedAt
+
+**All three entities:**
+- Use **String-based IDs** (Mongo ObjectId serialized as String)
+- Have **Repository + Service** layers
+- Are part of valid SoftUni functionalities
+
 
 ---
 
@@ -90,17 +113,18 @@ Base path: `/api/v1`
 
 ### **POST Endpoints (modify state – required by SoftUni)**
 
-| Endpoint                 | Description                                     |
-|--------------------------|-------------------------------------------------|
-| **POST /invoices**       | Generate invoice (PDF) and save invoice record  |
-| **POST /complete-order** | Send WhatsApp notification and save message log |
+### **POST Endpoints**
+| Endpoint                 | Description                                |
+|--------------------------|--------------------------------------------|
+| **POST /invoices**       | Generate invoice (PDF) and save InvoiceLog |
+| **POST /complete-order** | Send WhatsApp notification (MessageLog)    |
 
 ### **GET Endpoints**
+| Endpoint                              | Description                                 |
+|---------------------------------------|---------------------------------------------|
+| **GET /history**                      | Returns all InvoiceLog + MessageLog records |
+| **GET /pdf/repair/{repairId}/latest** | Returns latest InvoiceLog PDF               |
 
-| Endpoint                              | Description                          |
-|---------------------------------------|--------------------------------------|
-| **GET /history**                      | Returns all invoice + message logs   |
-| **GET /pdf/repair/{repairId}/latest** | Returns latest generated PDF invoice |
 
 → These endpoints are **directly consumed by the main application** using **FeignClient**.
 
@@ -109,21 +133,21 @@ Base path: `/api/v1`
 ## 2.5 Functionalities (Microservice)
 
 ### 1) Generate Invoice (PDF)
-- Triggered from main app
-- POST request with repair data
-- Generates PDF file
-- Stores `InvoiceRecord`
-- Returns URL to download PDF
+- Triggered from the main app
+- Creates and stores an InvoiceLog
+- Stores PDF binary into MongoDB
 
 ### 2) Send WhatsApp Notification
-- Triggered when repair order is completed
-- Uses **GreenAPI**
-- Saves `MessageLog`
+- Uses GreenAPI
+- Stores a MessageLog
 
 ### 3) Provide Repair History
-- Returns all logs for admin panel in main app
+- Returns InvoiceLog + RepairLog + MessageLog entries
+- 
+### 4) Create RepairLog entries  
+   Every major repair event from the main application is recorded in MongoDB for history and auditing.
 
-All three satisfy the requirement for **2+ valid functionalities**.
+All satisfy the requirement for **2+ valid functionalities**.
 
 ---
 
@@ -139,11 +163,18 @@ All three satisfy the requirement for **2+ valid functionalities**.
 
 ## 2.7 Database Requirements
 
-- MongoDB database (separate from main app)
-- UUID IDs
-- Entities stored in collections
+- MongoDB database (fully separated from the main application)
+- String-based IDs (Mongo ObjectId stored as String)
+- UUID values used only when referencing MySQL data (`repairId` in InvoiceLog)
+- Entities stored in dedicated collections (`invoice_logs`, `repair_logs`)
 - Indexed fields (repairId)
 - Fully Dockerized
+
+## Collections:
+- `invoice_logs`
+- `repair_logs`
+- generic collection for `MessageLog` (auto-managed by Spring)
+
 
 ---
 
@@ -151,22 +182,24 @@ All three satisfy the requirement for **2+ valid functionalities**.
 
 The microservice includes:
 
-- **Unit tests** (service layer)
-- **Integration test** (with embedded MongoDB or Testcontainers)
-- **API tests** (MockMvc controllers)
+- **Unit tests** for the service layer
+- **API tests (MockMvc)** for controller endpoints
+- **Integration-style tests** using Spring Boot Test with an active MongoDB instance (via Docker)
+- Verification of invoice generation, message logging, and history endpoints
 
-Coverage target: **80%+**, as required.
+Overall project test coverage meets the SoftUni requirement of **80%+** combined for main app + microservice.
 
 ---
 
 ## 2.9 Logging
 
-- Log statements added for:
-    - Invoice creation
-    - Message sending
-    - External API responses
-    - Error handling
-- Follows main project’s logging conventions
+Log statements added for:
+- InvoiceLog creation
+- MessageLog sending
+- RepairLog entries
+- External API responses
+- Error handling
+
 
 ---
 
