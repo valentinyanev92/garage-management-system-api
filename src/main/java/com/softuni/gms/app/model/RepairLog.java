@@ -16,7 +16,6 @@ public class RepairLog {
 
     @Id
     private String id;
-
     private String repairId;
     private String status;
     private String message;

@@ -14,7 +14,6 @@ public class MessageLog {
 
     @Id
     private String id;
-
     private String recipient;
     private String messageContent;
     private String channel;
